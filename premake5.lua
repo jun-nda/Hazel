@@ -39,7 +39,7 @@ project "Hazel"
 	includedirs {
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%IncludeDir.GLFW",
+		"%{IncludeDir.GLFW}",
 	}
 	
 	filter "system:windows"
