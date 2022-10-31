@@ -1,22 +1,24 @@
 
 #include <Hazel.h>
-//namespace Hazel{
+// namespace Hazel{
 //	__declspec( dllimport ) void App( );
 //}
 
-class Sandbox : public Hazel::Application
-{
+class ExampleLayer : public Hazel::Layer {
 public:
-	Sandbox( ){
+    ExampleLayer()
+        : Layer("Example") {}
 
-	}
+    void OnUpdate() override { HZ_INFO("ExampleLayer::Update"); }
 
-	~Sandbox( ){
-
-	}
+    void OnEvent(Hazel::Event& event) override { HZ_TRACE("{0}", event); }
 };
 
-Hazel::Application* Hazel::CreateApplication( )
-{
-	return new Sandbox( );
-}
+class Sandbox : public Hazel::Application {
+public:
+    Sandbox() { PushLayer(new ExampleLayer()); }
+
+    ~Sandbox() {}
+};
+
+Hazel::Application* Hazel::CreateApplication() { return new Sandbox(); }
