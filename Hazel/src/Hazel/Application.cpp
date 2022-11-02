@@ -1,4 +1,5 @@
 #include "hzpch.h"
+
 #include "Application.h"
 
 #include "Hazel/Events/ApplicationEvent.h"
@@ -10,16 +11,27 @@ namespace Hazel {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
+Application* Application::s_Instance = nullptr;
+
 Application::Application() {
+    HZ_CORE_ASSERT(!s_Instance, "Application already exists!");
+    s_Instance = this;
+
     m_Window = std::unique_ptr<Window>(Window::Create());
     m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 }
 
 Application::~Application() {}
 
-void Application::PushLayer(Layer* layer) { m_LayerStack.PushLayer(layer); }
+void Application::PushLayer(Layer* layer) {
+    m_LayerStack.PushLayer(layer);
+    layer->OnAttach();
+}
 
-void Application::PushOverlay(Layer* layer) { m_LayerStack.PushOverlay(layer); }
+void Application::PushOverlay(Layer* layer) {
+    m_LayerStack.PushOverlay(layer);
+    layer->OnAttach();
+}
 
 void Application::OnEvent(Event& e) {
     EventDispatcher dispatcher(e);
@@ -49,7 +61,7 @@ void Application::Run() {
         HZ_TRACE(e);
     }
 
-    //while (m_Running)
+    // while (m_Running)
     //    ;
 }
 
