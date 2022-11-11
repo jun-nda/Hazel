@@ -3,6 +3,7 @@
 // namespace Hazel{
 //	__declspec( dllimport ) void App( );
 //}
+#include "imgui/imgui.h"
 
 class ExampleLayer : public Hazel::Layer {
 public:
@@ -14,6 +15,12 @@ public:
 
         if (Hazel::Input::IsKeyPressed(HZ_KEY_TAB))
             HZ_TRACE("Tab key is pressed (poll)!");
+    }
+
+    virtual void OnImGuiRender() override {
+        ImGui::Begin("Test");
+        ImGui::Text("Hello World");
+        ImGui::End();
     }
 
     void OnEvent(Hazel::Event& event) override {
@@ -30,7 +37,6 @@ class Sandbox : public Hazel::Application {
 public:
     Sandbox() { 
         PushLayer(new ExampleLayer());
-        PushOverlay(new Hazel::ImGuiLayer());
     }
 
     ~Sandbox() {}
