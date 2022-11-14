@@ -24,6 +24,29 @@ Application::Application() {
 
     m_ImGuiLayer = new ImGuiLayer();
     PushOverlay(m_ImGuiLayer);
+
+    // first triangle
+    glGenVertexArrays(1, &m_VertexArray);
+
+    unsigned int VBO;
+    glGenBuffers(1, &m_VertexBuffer);
+
+    float vertex[] = {
+        0.5f, 0.0f, 0.0f, -0.5, 0.f, 0.0f, 0.f, 0.5f, 0.0f,
+    };
+
+    glBindVertexArray(m_VertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    glGenBuffers(1, &m_IndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
+
+    unsigned int indices[3] = {0, 1, 2};
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
 }
 
 Application::~Application() {}
