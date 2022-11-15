@@ -27,16 +27,16 @@ Application::Application() {
 
     // first triangle
     glGenVertexArrays(1, &m_VertexArray);
+    glBindVertexArray(m_VertexArray);
 
-    unsigned int VBO;
     glGenBuffers(1, &m_VertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 
     float vertex[] = {
         0.5f, 0.0f, 0.0f, -0.5, 0.f, 0.0f, 0.f, 0.5f, 0.0f,
     };
 
-    glBindVertexArray(m_VertexArray);
-    glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
@@ -75,8 +75,11 @@ void Application::OnEvent(Event& e) {
 
 void Application::Run() {
     while (m_Running) {
-        glClearColor(1, 0, 1, 1);
+        glClearColor(0.1f, 0.1f, 0.1f, 1);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindVertexArray(m_VertexArray);
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
         for (Layer* layer : m_LayerStack)
             layer->OnUpdate();
