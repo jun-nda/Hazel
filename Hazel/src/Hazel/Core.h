@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef HZ_PLATFORM_WINDOWS
+//#define HZ_DYNAMIC_LINK
 #if HZ_DYNAMIC_LINK
 	#ifdef HZ_BUILD_DLL
 		#define HAZEL_API __declspec(dllexport)
