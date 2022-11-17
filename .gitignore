@@ -10,3 +10,4 @@ SandBox/*.vcxproj*
 Hazel/vendor/*.vcxproj*
 *.sln
 GenerateProjects.bat
+/Hazel/vendor/Glad/*.vcxproj
