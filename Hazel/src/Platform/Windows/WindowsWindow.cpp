@@ -3,8 +3,8 @@
 #include "WindowsWindow.h"
 
 #include "Hazel/Events/ApplicationEvent.h"
-#include "Hazel/Events/MouseEvent.h"
 #include "Hazel/Events/KeyEvent.h"
+#include "Hazel/Events/MouseEvent.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 
@@ -18,11 +18,21 @@ static void GLFWErrorCallback(int error, const char* description) {
 
 Window* Window::Create(const WindowProps& props) { return new WindowsWindow(props); }
 
-WindowsWindow::WindowsWindow(const WindowProps& props) { Init(props); }
+WindowsWindow::WindowsWindow(const WindowProps& props) {
+    HZ_PROFILE_FUNCTION();
 
-WindowsWindow::~WindowsWindow() { Shutdown(); }
+    Init(props);
+}
+
+WindowsWindow::~WindowsWindow() {
+    HZ_PROFILE_FUNCTION();
+
+    Shutdown();
+}
 
 void WindowsWindow::Init(const WindowProps& props) {
+    HZ_PROFILE_FUNCTION();
+
     m_Data.Title  = props.Title;
     m_Data.Width  = props.Width;
     m_Data.Height = props.Height;
@@ -30,6 +40,8 @@ void WindowsWindow::Init(const WindowProps& props) {
     HZ_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
     if (!s_GLFWInitialized) {
+        HZ_PROFILE_SCOPE("glfwInit");
+
         // TODO: glfwTerminate on system shutdown
         int success = glfwInit();
         HZ_CORE_ASSERT(success, "Could not intialize GLFW!");
@@ -37,8 +49,11 @@ void WindowsWindow::Init(const WindowProps& props) {
         s_GLFWInitialized = true;
     }
 
-    m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-    
+	{
+        HZ_PROFILE_SCOPE("glfwCreateWindow");
+        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        //++s_GLFWWindowCount;
+    }
     m_Context = new OpenGLContext(m_Window);
     m_Context->Init();
 
@@ -122,14 +137,22 @@ void WindowsWindow::Init(const WindowProps& props) {
     });
 }
 
-void WindowsWindow::Shutdown() { glfwDestroyWindow(m_Window); }
+void WindowsWindow::Shutdown() {
+    HZ_PROFILE_FUNCTION();
+
+    glfwDestroyWindow(m_Window);
+}
 
 void WindowsWindow::OnUpdate() {
+    HZ_PROFILE_FUNCTION();
+
     glfwPollEvents();
     glfwSwapBuffers(m_Window);
 }
 
 void WindowsWindow::SetVSync(bool enabled) {
+    HZ_PROFILE_FUNCTION();
+
     if (enabled)
         glfwSwapInterval(1);
     else
@@ -138,6 +161,10 @@ void WindowsWindow::SetVSync(bool enabled) {
     m_Data.VSync = enabled;
 }
 
-bool WindowsWindow::IsVSync() const { return m_Data.VSync; }
+bool WindowsWindow::IsVSync() const {
+    HZ_PROFILE_FUNCTION();
+
+    return m_Data.VSync;
+}
 
 } // namespace Hazel

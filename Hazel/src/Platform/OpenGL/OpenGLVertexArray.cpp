@@ -36,15 +36,33 @@ static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
     return 0;
 }
 
-OpenGLVertexArray::OpenGLVertexArray() { glCreateVertexArrays(1, &m_RendererID); }
+OpenGLVertexArray::OpenGLVertexArray() {
+    HZ_PROFILE_FUNCTION();
 
-OpenGLVertexArray::~OpenGLVertexArray() { glDeleteVertexArrays(1, &m_RendererID); }
+    glCreateVertexArrays(1, &m_RendererID);
+}
 
-void OpenGLVertexArray::Bind() const { glBindVertexArray(m_RendererID); }
+OpenGLVertexArray::~OpenGLVertexArray() {
+    HZ_PROFILE_FUNCTION();
 
-void OpenGLVertexArray::Unbind() const { glBindVertexArray(0); }
+    glDeleteVertexArrays(1, &m_RendererID);
+}
+
+void OpenGLVertexArray::Bind() const {
+    HZ_PROFILE_FUNCTION();
+
+    glBindVertexArray(m_RendererID);
+}
+
+void OpenGLVertexArray::Unbind() const {
+    HZ_PROFILE_FUNCTION();
+
+    glBindVertexArray(0);
+}
 
 void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& vertexBuffer) {
+    HZ_PROFILE_FUNCTION();
+
     HZ_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
     glBindVertexArray(m_RendererID);
@@ -62,6 +80,8 @@ void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& ver
 }
 
 void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& indexBuffer) {
+    HZ_PROFILE_FUNCTION();
+
     glBindVertexArray(m_RendererID);
     indexBuffer->Bind();
 
