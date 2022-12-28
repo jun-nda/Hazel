@@ -1,49 +1,53 @@
 #pragma once
-#include "Core.h"
 
-#include "Hazel/Events/ApplicationEvent.h"
-#include "Hazel/Events/Event.h"
+#include "Hazel/Core/Base.h"
+
+#include "Hazel/Core/Window.h"
 #include "Hazel/Core/LayerStack.h"
-#include "Window.h"
+#include "Hazel/Events/Event.h"
+#include "Hazel/Events/ApplicationEvent.h"
 
 #include "Hazel/Core/Timestep.h"
+
 #include "Hazel/ImGui/ImGuiLayer.h"
-#include "Hazel/Renderer/OrthographicCamera.h"
+
+int main(int argc, char** argv);
 
 namespace Hazel {
-class HAZEL_API Application {
-public:
-    Application();
-    virtual ~Application();
-    void Run();
 
-    void OnEvent(Event& e);
+	class Application
+	{
+	public:
+		Application(const std::string& name = "Hazel App");
+		virtual ~Application();
 
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* layer);
+		void OnEvent(Event& e);
 
-    inline Window& GetWindow() { return *m_Window; }
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 
-    inline static Application& Get() { return *s_Instance; }
+		Window& GetWindow() { return *m_Window; }
 
-private:
-    bool OnWindowClose(WindowCloseEvent& e);
-    bool OnWindowResize(WindowResizeEvent& e);
+		void Close();
 
-private:
-    std::unique_ptr<Window> m_Window;
-    ImGuiLayer*             m_ImGuiLayer;
-    bool                    m_Running = true;
+		static Application& Get() { return *s_Instance; }
+	private:
+		void Run();
+		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
+	private:
+		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
+		bool m_Running = true;
+		bool m_Minimized = false;
+		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
+	private:
+		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
+	};
 
-    bool       m_Minimized = false;
-    LayerStack m_LayerStack;
+	// To be defined in CLIENT
+	Application* CreateApplication();
 
-    float m_LastFrameTime = 0.0f;
-
-private:
-    static Application* s_Instance;
-};
-
-// To be defined in CLIENT
-Application* CreateApplication();
-} // namespace Hazel
+}

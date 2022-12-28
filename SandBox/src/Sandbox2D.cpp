@@ -15,6 +15,11 @@ void Sandbox2D::OnAttach() {
     HZ_PROFILE_FUNCTION();
 
     m_CheckerboardTexture = Hazel::Texture2D::Create("assets/textures/Checkerboard.png");
+
+    //Hazel::FramebufferSpecification fbSpec;
+    //fbSpec.Width  = 1280;
+    //fbSpec.Height = 720;
+    //m_Framebuffer = Hazel::Framebuffer::Create(fbSpec);
 }
 
 void Sandbox2D::OnDetach() { HZ_PROFILE_FUNCTION(); }
@@ -30,6 +35,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts) {
 
     {
         HZ_PROFILE_SCOPE("Renderer Prep");
+        //m_Framebuffer->Bind();
         Hazel::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         Hazel::RenderCommand::Clear();
     }
@@ -55,6 +61,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts) {
             }
         }
         Hazel::Renderer2D::EndScene();
+        //m_Framebuffer->Unbind();
     }
 }
 
