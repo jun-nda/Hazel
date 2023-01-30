@@ -28,7 +28,7 @@ private:
     Entity     m_SquareEntity;
 
     Entity m_CameraEntity;
-    Entity m_SecondCamera;
+    Entity m_SecondCamera; // why SecondCamera?
 
     bool m_PrimaryCamera = true;
 

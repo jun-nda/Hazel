@@ -13,8 +13,8 @@ public:
     Entity(const Entity& other) = default;
 
     template <typename T, typename... Args>
-    T& AddComponent(Args&&... args) {
-        HZ_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!");
+    T& AddComponent(Args&&...args) {
+        HZ_CORE_ASSERT(!HasComponent<T>(), "Entity already has component!")
         return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
     }
 
