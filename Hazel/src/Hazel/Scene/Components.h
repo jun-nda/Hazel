@@ -3,28 +3,34 @@
 #include <glm/glm.hpp>
 
 namespace Hazel {
+struct TagComponent {
+    std::string Tag;
 
-	struct TransformComponent
-	{
-		glm::mat4 Transform{ 1.0f };
+    TagComponent()                    = default;
+    TagComponent(const TagComponent&) = default;
+    TagComponent(const std::string& tag)
+        : Tag(tag) {}
+};
 
-		TransformComponent() = default;
-		TransformComponent(const TransformComponent&) = default;
-		TransformComponent(const glm::mat4 & transform)
-			: Transform(transform) {}
+struct TransformComponent {
+    glm::mat4 Transform{1.0f};
 
-		operator glm::mat4& () { return Transform; }
-		operator const glm::mat4& () const { return Transform; }
-	};
+    TransformComponent()                          = default;
+    TransformComponent(const TransformComponent&) = default;
+    TransformComponent(const glm::mat4& transform)
+        : Transform(transform) {}
 
-	struct SpriteRendererComponent
-	{
-		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+    operator glm::mat4&() { return Transform; }
+    operator const glm::mat4&() const { return Transform; }
+};
 
-		SpriteRendererComponent() = default;
-		SpriteRendererComponent(const SpriteRendererComponent&) = default;
-		SpriteRendererComponent(const glm::vec4& color)
-			: Color(color) {}
-	};
+struct SpriteRendererComponent {
+    glm::vec4 Color{1.0f, 1.0f, 1.0f, 1.0f};
 
-}
+    SpriteRendererComponent()                               = default;
+    SpriteRendererComponent(const SpriteRendererComponent&) = default;
+    SpriteRendererComponent(const glm::vec4& color)
+        : Color(color) {}
+};
+
+} // namespace Hazel
