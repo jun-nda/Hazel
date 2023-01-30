@@ -5,6 +5,7 @@
 #include "Hazel/Renderer/RenderCommand.h"
 #include "Hazel/Renderer/Shader.h"
 #include "Hazel/Renderer/VertexArray.h"
+#include "Hazel/Renderer/Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -104,6 +105,19 @@ void Renderer2D::Shutdown() {
     delete[] s_Data.QuadVertexBufferBase;
 }
 
+void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform) {
+    HZ_PROFILE_FUNCTION();
+
+    glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+    s_Data.TextureShader->Bind();
+    s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+    s_Data.QuadIndexCount      = 0;
+    s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+    s_Data.TextureSlotIndex = 1;
+}
 void Renderer2D::BeginScene(const OrthographicCamera& camera) {
     HZ_PROFILE_FUNCTION();
 
@@ -184,7 +198,6 @@ void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color) {
 
     if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         FlushAndReset();
-
 
     for (size_t i = 0; i < quadVertexCount; i++) {
         s_Data.QuadVertexBufferPtr->Position     = transform * s_Data.QuadVertexPositions[i];
