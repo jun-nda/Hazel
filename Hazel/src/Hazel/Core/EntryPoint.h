@@ -3,6 +3,7 @@
 
 #ifdef HZ_PLATFORM_WINDOWS
 
+// 这个extern貌似就起了标识的作用, 告诉编译器外面有定义，但是不加也可以运行
 extern Hazel::Application* Hazel::CreateApplication();
 
 int main(int argc, char** argv)

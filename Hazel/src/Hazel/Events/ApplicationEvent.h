@@ -61,4 +61,13 @@ namespace Hazel {
 		EVENT_CLASS_TYPE(AppRender)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
-}
+
+	// test
+    class TestEvent : public Event {
+    public:
+        TestEvent() = default;
+
+        EVENT_CLASS_TYPE(AppRender)
+        EVENT_CLASS_CATEGORY(EventCategoryApplication)
+    };
+ }

@@ -1,6 +1,6 @@
-workspace "Hazel"
-	architecture "x64"
-	startproject "Hazelnut"
+workspace "Hazel" -- Solution name
+	architecture "x64" -- Compile platform
+	startproject "Hazelnut" -- Start project name 
 
 	configurations
 	{
@@ -27,15 +27,15 @@ group "Dependencies"
 
 group ""
 
-project "Hazel"
-	location "Hazel"
-	kind "StaticLib"
+project "Hazel" -- project name
+	location "Hazel" -- project directory relative to root folder (solution directory)
+	kind "StaticLib" -- lib or dll or exe (TODO: hazel一开始是动态库后来改成了静态库)
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "on" -- TODO:
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}") -- output directory
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}") -- temporary directory
 
 	pchheader "hzpch.h"
 	pchsource "Hazel/src/hzpch.cpp"
@@ -67,8 +67,8 @@ project "Hazel"
 		"%{IncludeDir.entt}",
 	}
 
-	links 
-	{ 
+	links
+	{
 		"GLFW",
 		"Glad",
 		"ImGui",
@@ -78,6 +78,7 @@ project "Hazel"
 	filter "system:windows"
 		systemversion "latest"
 
+		-- Precompiled macro
 		defines
 		{
 			"HZ_PLATFORM_WINDOWS",
@@ -121,7 +122,8 @@ project "Sandbox"
 		"Hazel/vendor/spdlog/include",
 		"Hazel/src",
 		"Hazel/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -165,7 +167,9 @@ project "Hazelnut"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/Panels/**.h",
+		"%{prj.name}/Panels/**.cpp"
 	}
 
 	includedirs

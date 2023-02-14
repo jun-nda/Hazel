@@ -27,6 +27,9 @@ void EditorLayer::OnAttach() {
     auto square = m_ActiveScene->CreateEntity("Green Square");
     square.AddComponent<SpriteRendererComponent>(glm::vec4{0.0f, 1.0f, 0.0f, 1.0f});
 
+    auto redSquare = m_ActiveScene->CreateEntity("Red Square");
+    redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{1.0f, 0.0f, 0.0f, 1.0f});
+
     m_SquareEntity = square;
 
     m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
@@ -35,6 +38,35 @@ void EditorLayer::OnAttach() {
     m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
     auto& cc       = m_SecondCamera.AddComponent<CameraComponent>();
     cc.Primary     = false;
+
+    class CameraController : public ScriptableEntity {
+    public:
+        virtual void OnCreate() override {
+            auto& transform = GetComponent<TransformComponent>().Transform;
+            transform[3][0] = rand() % 10 - 5.0f;
+        }
+
+        virtual void OnDestroy() override {}
+
+        virtual void OnUpdate(Timestep ts) override {
+            auto& transform = GetComponent<TransformComponent>().Transform;
+            float speed     = 5.0f;
+
+            if (Input::IsKeyPressed(KeyCode::A))
+                transform[3][0] -= speed * ts;
+            if (Input::IsKeyPressed(KeyCode::D))
+                transform[3][0] += speed * ts;
+            if (Input::IsKeyPressed(KeyCode::W))
+                transform[3][1] += speed * ts;
+            if (Input::IsKeyPressed(KeyCode::S))
+                transform[3][1] -= speed * ts;
+        }
+    };
+
+    m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    m_SecondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 }
 
 void EditorLayer::OnDetach() { HZ_PROFILE_FUNCTION(); }
@@ -128,6 +160,8 @@ void EditorLayer::OnImGuiRender() {
 
         ImGui::EndMenuBar();
     }
+
+    m_SceneHierarchyPanel.OnImGuiRender();
 
     ImGui::Begin("Settings");
 

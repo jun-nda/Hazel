@@ -23,6 +23,7 @@ private:
     uint32_t       m_ViewportWidth = 0, m_ViewportHeight = 0;
 
     friend class Entity;
+    friend class SceneHierarchyPanel; // 这里Scene咋知道 SceneHierarchyPanel的？ 链接的时候才会检查嘛
 };
 
 } // namespace Hazel
